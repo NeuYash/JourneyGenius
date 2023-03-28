@@ -82,6 +82,42 @@ public class Graph implements Serializable {
 		return mst;
 	}
 
+	public List<Edge> getMinimumWeightPerfectMatching() {
+		List<Edge> result = new ArrayList<>();
+		List<Node> nodes = new ArrayList<>(this.nodes);
+		while (!nodes.isEmpty()) {
+			Node node = nodes.remove(0);
+			double minWeight = Double.MAX_VALUE;
+			Node minNode = null;
+			List<Node> backupNode = this.nodes;
+			for (Node otherNode : nodes) {
+				double weight = calculateDistance(node, otherNode);
+				if (weight < minWeight) {
+					minWeight = weight;
+					minNode = otherNode;
+				}
+				result.add(new Edge(node, minNode, minWeight));
+				backupNode.remove(minNode);
+			}
+			this.nodes = backupNode;
+			return result;
+		}
+		return result;
+	}
+
+	public Map<Node, List<Node>> adjacencyMatrix() {
+		Map<Node, List<Node>> adjacencyMatrix = new HashMap<>();
+		for (Node node : this.nodes) {
+			adjacencyMatrix.put(node, new ArrayList<>());
+		}
+		for (Edge edge : this.edges) {
+			adjacencyMatrix.get(edge.source).add(edge.destination);
+			adjacencyMatrix.get(edge.destination).add(edge.source);
+		}
+		return adjacencyMatrix;
+
+	}
+
 	private Node find(Node node, Map<Node, Node> parents) {
 		if (parents.get(node) == node) {
 			return node;
