@@ -1,54 +1,45 @@
 package com.project;
 
+import com.project.model.Graph;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import com.project.model.Node;
+
 public class App {
 
-	static int tsp(int[][] graph, boolean[] v, int currPos, int n, int count, int cost, int ans) {
+	public static void main(String[] args) {
 
-		// If last node is reached and it has a link
-		// to the starting node i.e the source then
-		// keep the minimum value out of the total cost
-		// of traversal and "ans"
-		// Finally return to check for more possible values
-		if (count == n && graph[currPos][0] > 0) {
-			ans = Math.min(ans, cost + graph[currPos][0]);
-			return ans;
-		}
-
-		// BACKTRACKING STEP
-		// Loop to traverse the adjacency list
-		// of currPos node and increasing the count
-		// by 1 and cost by graph[currPos,i] value
-		for (int i = 0; i < n; i++) {
-			if (v[i] == false && graph[currPos][i] > 0) {
-
-				// Mark as visited
-				v[i] = true;
-				ans = tsp(graph, v, i, n, count + 1, cost + graph[currPos][i], ans);
-
-				// Mark ith node as unvisited
-				v[i] = false;
-			}
-		}
-		return ans;
 	}
 
-	public static void main(String[] args) {
-		int n = 4;
-
-		int[][] graph = { { 0, 10, 15, 20 }, { 10, 0, 35, 25 }, { 15, 35, 0, 30 }, { 20, 25, 30, 0 } };
-
-		// Boolean array to check if a node
-		// has been visited or not
-		boolean[] v = new boolean[n];
-
-		// Mark 0th node as visited
-		v[0] = true;
-		int ans = Integer.MAX_VALUE;
-
-		// Find the minimum weight Hamiltonian Cycle
-		ans = tsp(graph, v, 0, n, 1, 0, ans);
-
-		// ans is the minimum weight Hamiltonian Cycle
-		System.out.println(ans);
+	public static Graph getNodesFromcrimeDataset() {
+		Graph graph = new Graph();
+		String line = "";
+		String splitBy = ",";
+		Set<String> uniqueNodes = new HashSet<String>();
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("crimeSample.csv"));
+			reader.readLine();
+			int count=0;
+			while ((line = reader.readLine()) != null ) {
+				count++;
+				String[] node = line.split(splitBy);
+				if(node.length>0 && !(node[0].isEmpty() || node[1].isEmpty() || node[2].isEmpty())){
+					String nodeKey = node[1] + "," + node[2];
+					if (!uniqueNodes.contains(nodeKey)) {
+						uniqueNodes.add(nodeKey);
+						Node n = new Node(node[0], Double.parseDouble(node[1]), Double.parseDouble(node[2]));
+						graph.addNode(n);
+					}
+				}
+			}
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return graph;
 	}
 }
