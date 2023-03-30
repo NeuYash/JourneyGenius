@@ -28,4 +28,10 @@ public class Christofides {
         }
         return oddDegreeNodes;
     }
+
+    public static List<Edge> getMinimumWeightPerfectMatching(List<Node> oddDegreeNodes) {
+        Graph subgraph = new Graph(oddDegreeNodes);
+        subgraph.connectAllNodes();
+        return subgraph.getMinimumWeightPerfectMatching();
+    }
 }
