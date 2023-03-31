@@ -1,9 +1,6 @@
 package com.project.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Christofides {
 
@@ -33,5 +30,27 @@ public class Christofides {
         Graph subgraph = new Graph(oddDegreeNodes);
         subgraph.connectAllNodes();
         return subgraph.getMinimumWeightPerfectMatching();
+    }
+
+    private static void dfs(Node node, List<Node> eulerTour, List<Edge> edges, Set<Node> visited,
+                            Map<Node, List<Node>> adjacenyMatrix) {
+
+        visited.add(node);
+        for (Node v : adjacenyMatrix.get(node)) {
+            if (!visited.contains(v)) {
+                eulerTour.add(node);
+                eulerTour.add(v);
+
+                Edge matchedEdge = edges.get(0);
+                for (Edge edge : edges) {
+                    if (edge.source.crimeId == node.crimeId && edge.destination.crimeId == v.crimeId) {
+                        matchedEdge = edge;
+                        break;
+                    }
+                }
+                edges.remove(matchedEdge);
+                dfs(v, eulerTour, edges, visited, adjacenyMatrix);
+            }
+        }
     }
 }
