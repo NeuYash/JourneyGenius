@@ -53,4 +53,16 @@ public class Christofides {
             }
         }
     }
+
+    // Step 5: Find an Eulerian circuit in the Eulerian graph
+    public static List<Node> eulerTour(Graph graph, List<Edge> mst, List<Edge> perfEdges) {
+        List<Node> eulerTour = new ArrayList<>();
+        List<Edge> combineEdges = new ArrayList<>(mst);
+        combineEdges.addAll(perfEdges);
+        Map<Node, List<Node>> adjacencyMatrix = graph.adjacencyMatrix();
+        Set<Node> visited = new HashSet<>();
+        Node startNode = combineEdges.get(0).source;
+        dfs(startNode, eulerTour, combineEdges, visited, adjacencyMatrix);
+        return eulerTour;
+    }
 }
