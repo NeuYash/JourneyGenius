@@ -65,4 +65,17 @@ public class Christofides {
         dfs(startNode, eulerTour, combineEdges, visited, adjacencyMatrix);
         return eulerTour;
     }
+
+    // Step 6: Remove duplicates to obtain the TSP path
+    public static List<Node> generateTSPTour(List<Node> eulerTour) {
+        List<Node> hamiltonList = new ArrayList<>();
+        Set<Node> visited = new HashSet<>();
+        for (Node node : eulerTour) {
+            if (!visited.contains(node)) {
+                visited.add(node);
+                hamiltonList.add(node);
+            }
+        }
+        return hamiltonList;
+    }
 }
