@@ -78,4 +78,28 @@ public class Christofides {
         }
         return hamiltonList;
     }
+
+    private static void swap(List<Node> nodes, Integer i, Integer j) {
+        Node nodeI = nodes.get(i);
+        Node nodeJ = nodes.get(j);
+        nodes.set(i, nodeJ);
+        nodes.set(j, nodeI);
+    }
+
+    public static double calculateTourLength(List<Node> tour) {
+        double length = 0;
+        for (int i = 0; i < tour.size() - 2; i++) {
+            Node source = tour.get(i);
+            Node destination = tour.get(i + 1);
+            double l = Graph.calculateDistance(source, destination);
+            length += l;
+        }
+        /*
+         * Adding the distance between first and last node
+         */
+        Node source = tour.get(0);
+        Node destination = tour.get(tour.size() - 1);
+        length += Graph.calculateDistance(source, destination);
+        return length;
+    }
 }
