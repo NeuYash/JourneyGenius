@@ -15,13 +15,13 @@ import com.project.model.Node;
 
 public class App {
 
-    public static Graph getNodesFromcrimeDataset() {
+    public static Graph getNodesFromDataset() {
         Graph graph = new Graph();
         String line = "";
         String splitBy = ",";
-        Set<String> uniqueNodes = new HashSet<String>();
+        //Set<String> uniqueNodes = new HashSet<String>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("crimeSample.csv"));
+            BufferedReader reader = new BufferedReader(new FileReader("info6205.spring2023.teamproject.csv"));
             reader.readLine();
             int count = 0;
             while ((line = reader.readLine()) != null) {
@@ -29,11 +29,11 @@ public class App {
                 String[] node = line.split(splitBy);
                 if (node.length > 0 && !(node[0].isEmpty() || node[1].isEmpty() || node[2].isEmpty())) {
                     String nodeKey = node[1] + "," + node[2];
-                    if (!uniqueNodes.contains(nodeKey)) {
-                        uniqueNodes.add(nodeKey);
-                        Node n = new Node(node[0], Double.parseDouble(node[1]), Double.parseDouble(node[2]));
-                        graph.addNode(n);
-                    }
+//					if (!uniqueNodes.contains(nodeKey)) {
+//						uniqueNodes.add(nodeKey);
+                    Node n = new Node(node[0], Double.parseDouble(node[1]), Double.parseDouble(node[2]));
+                    graph.addNode(n);
+                    //}
                 }
             }
             reader.close();
@@ -44,23 +44,22 @@ public class App {
     }
 
     public static void main(String[] args) {
-        System.out.println("//CrimeSampleDataset//");
-        Graph graph1 = getNodesFromcrimeDataset();
-        graph1.connectAllNodes();
-        List<Edge> mst1 = Christofides.findMST(graph1);
-        System.out.println("List of Edges MST :" + mst1.size());
-        List<Node> oddDegrNodes1 = Christofides.findOddDegreeVertices(graph1, mst1);
-        List<Edge> perfectMatchingEdges1 = Christofides.getMinimumWeightPerfectMatching(oddDegrNodes1);
-        System.out.println("PFM :" + perfectMatchingEdges1.size());
-        List<Node> eulerTour1 = Christofides.eulerTour(graph1, mst1, perfectMatchingEdges1);
-        System.out.println("EUL :" + eulerTour1.size());
-        // printGraph(eulerTour1);
+        System.out.println("Dataset with 585 points");
+        Graph graph = getNodesFromDataset();
+        graph.connectAllNodes();
+        List<Edge> mst = Christofides.findMST(graph);
 
-        // generate TSP tour using euler cycle
-        List<Node> hamiltonCycle1 = Christofides.generateTSPTour(eulerTour1);
-        System.out.println("TSP - Hamiltonian cycle :" + hamiltonCycle1.size());
-        System.out.println("Hamiltonian cycle cost :" + Christofides.calculateTourLength(hamiltonCycle1));
+        List<Node> oddDegrNodes = Christofides.findOddDegreeVertices(graph, mst);
+
+        List<Edge> perfectMatchingEdges = Christofides.getMinimumWeightPerfectMatching(oddDegrNodes);
+
+        List<Node> eulerTour = Christofides.eulerTour(graph, mst, perfectMatchingEdges);
+
+        List<Node> hamiltonCycle = Christofides.generateTSPTour(eulerTour);
+        System.out.println("Hamiltonian cycle cost :" + Christofides.calculateTourLength(hamiltonCycle));
+
+        // generate TSP using Random Swap optimization
+        List<Node> randomTour = Christofides.randomSwapOptimise(hamiltonCycle, 20000);
+        System.out.println("Random tour cost :" + Christofides.calculateTourLength(randomTour));
     }
-
-
 }

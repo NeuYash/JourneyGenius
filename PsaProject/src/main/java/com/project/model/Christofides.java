@@ -1,5 +1,7 @@
 package com.project.model;
 
+import com.project.utility.DeepCopyUtils;
+
 import java.util.*;
 
 public class Christofides {
@@ -77,6 +79,23 @@ public class Christofides {
             }
         }
         return hamiltonList;
+    }
+
+    public static List<Node> randomSwapOptimise(List<Node> tspTour, Integer iterations) {
+        List<Node> randomSwapTour = tspTour;
+        double currMaxTourLength = calculateTourLength(randomSwapTour);
+        for (int i = 0; i < iterations; i++) {
+            int randomIndexOne = (int) (Math.random() * tspTour.size());
+            int randomIndexTwo = (int) (Math.random() * tspTour.size());
+            List<Node> swappedTour = DeepCopyUtils.deepCopy(randomSwapTour);
+            swap(swappedTour, randomIndexOne, randomIndexTwo);
+            double swappedTourLength = calculateTourLength(swappedTour);
+            if (swappedTourLength < currMaxTourLength) {
+                currMaxTourLength = swappedTourLength;
+                randomSwapTour = DeepCopyUtils.deepCopy(swappedTour);
+            }
+        }
+        return randomSwapTour;
     }
 
     private static void swap(List<Node> nodes, Integer i, Integer j) {
