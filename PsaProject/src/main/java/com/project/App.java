@@ -61,5 +61,9 @@ public class App {
         // generate TSP using Random Swap optimization
         List<Node> randomTour = Christofides.randomSwapOptimise(hamiltonCycle, 20000);
         System.out.println("Random tour cost :" + Christofides.calculateTourLength(randomTour));
+
+        //generate TSP using 2 Opt Optimization
+        List<Node> twoOptTour = Christofides.twoOpt(hamiltonCycle);
+        System.out.println("Two Opt tour cost :" + Christofides.calculateTourLength(twoOptTour));
     }
 }

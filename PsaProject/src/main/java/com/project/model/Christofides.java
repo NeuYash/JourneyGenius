@@ -98,6 +98,51 @@ public class Christofides {
         return randomSwapTour;
     }
 
+    public static List<Node> twoOpt(List<Node> tour) {
+        List<Node> twoOptTour = new ArrayList<>(tour);
+        double length = calculateTourLength(twoOptTour);
+        int n = twoOptTour.size();
+
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                Node u = twoOptTour.get(i);
+                Node v = twoOptTour.get((i + 1) % n);
+                Node x = twoOptTour.get(j);
+                Node y = twoOptTour.get((j + 1) % n);
+
+                // Compute the lengths of the two possible new twoOptTours.
+                double newLength1 = length - Graph.calculateDistance(u, v) - Graph.calculateDistance(x, y)
+                        + Graph.calculateDistance(u, x) + Graph.calculateDistance(v, y);
+                double newLength2 = length - Graph.calculateDistance(u, v) - Graph.calculateDistance(x, y)
+                        + Graph.calculateDistance(u, y) + Graph.calculateDistance(v, x);
+
+                // If either of the new twoOptTours is shorter, accept it as the new TSP
+                // twoOptTour.
+                if (newLength1 < length || newLength2 < length) {
+                    List<Node> newTour = new ArrayList<>();
+
+                    for (int k = 0; k <= i; k++) {
+                        newTour.add(twoOptTour.get(k));
+                    }
+
+                    for (int k = j; k >= i + 1; k--) {
+                        newTour.add(twoOptTour.get(k));
+                    }
+
+                    for (int k = j + 1; k < n; k++) {
+                        newTour.add(twoOptTour.get(k));
+                    }
+
+                    // Update the length of the new twoOptTour.
+                    length = (newLength1 < newLength2) ? newLength1 : newLength2;
+                    tour = new ArrayList<>(newTour);
+                }
+            }
+        }
+
+        return tour;
+    }
+
     private static void swap(List<Node> nodes, Integer i, Integer j) {
         Node nodeI = nodes.get(i);
         Node nodeJ = nodes.get(j);
