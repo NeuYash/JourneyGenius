@@ -143,6 +143,108 @@ public class Christofides {
         return tour;
     }
 
+    // 3 OPT
+    public static List<Node> threeOpt(List<Node> tour) {
+        boolean improvement = true;
+        while (improvement) {
+            improvement = false;
+            for (int i = 0; i < tour.size() - 3; i++) {
+                for (int j = i + 2; j < tour.size() - 1; j++) {
+                    for (int k = j + 2; k < tour.size(); k++) {
+                        double distA = Graph.calculateDistance(tour.get(i), tour.get(i + 1))
+                                + Graph.calculateDistance(tour.get(j), tour.get(j + 1))
+                                + Graph.calculateDistance(tour.get(k), tour.get(k - 1));
+                        double distB = Graph.calculateDistance(tour.get(i), tour.get(j))
+                                + Graph.calculateDistance(tour.get(i + 1), tour.get(j + 1))
+                                + Graph.calculateDistance(tour.get(k), tour.get(k - 1));
+                        double distC = Graph.calculateDistance(tour.get(i), tour.get(j + 1))
+                                + Graph.calculateDistance(tour.get(i + 1), tour.get(j))
+                                + Graph.calculateDistance(tour.get(k), tour.get(k - 1));
+                        double distD = Graph.calculateDistance(tour.get(i), tour.get(j + 1))
+                                + Graph.calculateDistance(tour.get(i + 1), tour.get(k))
+                                + Graph.calculateDistance(tour.get(j), tour.get(k - 1));
+                        double distE = Graph.calculateDistance(tour.get(i), tour.get(k))
+                                + Graph.calculateDistance(tour.get(j + 1), tour.get(i + 1))
+                                + Graph.calculateDistance(tour.get(j), tour.get(k - 1));
+                        if (distB < distA) {
+                            reverse(tour, i + 1, j);
+                            reverse(tour, j + 1, k);
+                            improvement = true;
+                        } else if (distC < distA) {
+                            swap1(tour, i + 1, j);
+                            swap1(tour, j + 1, k);
+                            improvement = true;
+                        } else if (distD < distA) {
+                            swap1(tour, i + 1, k);
+                            reverse(tour, j + 1, k);
+                            improvement = true;
+                        } else if (distE < distA) {
+                            swap1(tour, i + 1, j);
+                            swap1(tour, k, j + 1);
+                            improvement = true;
+                        }
+                    }
+                }
+            }
+        }
+        return tour;
+    }
+
+    public static void reverse(List<Node> tour, int start, int end) {
+        while (start < end) {
+            Node tmp = tour.get(start);
+            tour.set(start, tour.get(end));
+            tour.set(end, tmp);
+            start++;
+            end--;
+        }
+    }
+
+    public static void swap1(List<Node> tour, int i, int j) {
+        Node tmp = tour.get(i);
+        tour.set(i, tour.get(j));
+        tour.set(j, tmp);
+    }
+    // 3OPT finish
+
+    // 3 OPT Second Method
+    public static List<Node> threeOptChristofides(List<Node> nodes) {
+        int improvementCount = 0;
+        do {
+            improvementCount = 0;
+            for (int i = 0; i < nodes.size() - 2; i++)
+                for (int j = i + 1; j < nodes.size() - 1; j++)
+                    for (int k = j + 1; k < nodes.size(); k++) {
+
+                        List<Node> newNodes = Swap(nodes, i, j, k);
+                        if (Christofides.calculateTourLength(newNodes) < Christofides.calculateTourLength(nodes)) {
+                            nodes = newNodes;
+                            improvementCount++;
+                        }
+                    }
+        } while (improvementCount > 0);
+        return nodes;
+    }
+
+    public static List<Node> Swap(List<Node> nodes, int i, int j, int k) {
+        List<Node> newCities = new ArrayList<>();
+        for (int x = 0; x <= i; x++)
+            newCities.add(nodes.get(x));
+
+        for (int x = j + 1; x <= k; x++)
+            newCities.add(nodes.get(x));
+
+        for (int x = i + 1; x <= j; x++)
+            newCities.add(nodes.get(x));
+
+        for (int x = k + 1; x < nodes.size(); x++)
+            newCities.add(nodes.get(x));
+
+        return newCities;
+    }
+
+    // 3 OPT second Method finish
+
     private static void swap(List<Node> nodes, Integer i, Integer j) {
         Node nodeI = nodes.get(i);
         Node nodeJ = nodes.get(j);

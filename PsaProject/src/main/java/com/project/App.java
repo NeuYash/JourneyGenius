@@ -65,5 +65,14 @@ public class App {
         //generate TSP using 2 Opt Optimization
         List<Node> twoOptTour = Christofides.twoOpt(hamiltonCycle);
         System.out.println("Two Opt tour cost :" + Christofides.calculateTourLength(twoOptTour));
+
+        //3 OPT
+//		List<Node> threeOptTour = Christofides.threeOpt(hamiltonCycle);
+//		System.out.println("TSP using three Opt :" + threeOptTour.size());
+//		System.out.println("three Opt tour cost :" + Christofides.calculateTourLength(threeOptTour));
+//
+//        List<Node> threeOptChristofides = Christofides.threeOptChristofides(hamiltonCycle);
+//        System.out.println("TSP using three Opt :" + threeOptChristofides.size());
+//        System.out.println("three Opt Christofides tour cost :" + Christofides.calculateTourLength(threeOptChristofides));
     }
 }
