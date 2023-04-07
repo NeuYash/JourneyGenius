@@ -299,6 +299,49 @@ public class Christofides {
 
     // K Opt tour finish
 
+    // SIMULATED ANNEALING
+    public static List<Node> simulatedAnnealingOptimizeTour(List<Node> tour) {
+        Random rand = new Random();
+        double temperature = 10000;
+        //double coolingRate = 0.003;
+        double coolingRate = 0.01;
+        List<Node> currentSolution = new ArrayList<>(tour);
+        List<Node> bestSolution = new ArrayList<>(tour);
+
+        while (temperature > 1) {
+            List<Node> newSolution = new ArrayList<>(currentSolution);
+
+            // Generate a new neighboring solution by randomly swapping two nodes
+            int i = rand.nextInt(newSolution.size() - 1) + 1;
+            int j = rand.nextInt(newSolution.size() - 1) + 1;
+            Node tmp = newSolution.get(i);
+            newSolution.set(i, newSolution.get(j));
+            newSolution.set(j, tmp);
+
+            // Compute the cost of the new and current solutions
+//            double currentCost = computeTourCost(currentSolution);
+//            double newCost = computeTourCost(newSolution);
+            double currentCost = calculateTourLength(currentSolution);
+            double newCost = calculateTourLength(newSolution);
+
+            // Decide whether to accept the new solution or not
+            if (newCost < currentCost) {
+                currentSolution = new ArrayList<>(newSolution);
+            } else if (Math.exp((currentCost - newCost) / temperature) > rand.nextDouble()) {
+                currentSolution = new ArrayList<>(newSolution);
+            }
+
+            // Update the best solution found so far
+            if (calculateTourLength(currentSolution) < calculateTourLength(bestSolution)) {
+                bestSolution = new ArrayList<>(currentSolution);
+            }
+
+            // Decrease the temperature
+            temperature *= 1 - coolingRate;
+        }
+
+        return currentSolution;
+    }
     private static void swap(List<Node> nodes, Integer i, Integer j) {
         Node nodeI = nodes.get(i);
         Node nodeJ = nodes.get(j);

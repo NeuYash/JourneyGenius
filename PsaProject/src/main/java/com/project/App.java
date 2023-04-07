@@ -74,5 +74,9 @@ public class App {
 //        List<Node> threeOptChristofides = Christofides.threeOptChristofides(hamiltonCycle);
 //        System.out.println("TSP using three Opt :" + threeOptChristofides.size());
 //        System.out.println("three Opt Christofides tour cost :" + Christofides.calculateTourLength(threeOptChristofides));
+
+        // simulated annealing
+        List<Node> simulatedAnneTour = Christofides.simulatedAnnealingOptimizeTour(hamiltonCycle);
+        System.out.println("Simulated Annealing tour cost :" + Christofides.calculateTourLength(simulatedAnneTour));
     }
 }
