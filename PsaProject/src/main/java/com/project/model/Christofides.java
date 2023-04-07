@@ -242,8 +242,62 @@ public class Christofides {
 
         return newCities;
     }
-
     // 3 OPT second Method finish
+
+    // K Opt tour
+    public static void kOpt(List<Node> tour, int k) {
+        int n = tour.size();
+        List<Node> segment = new ArrayList<>(k + 1);
+        List<Node> newTour = new ArrayList<>(n);
+        List<Node> flipped = new ArrayList<>(k + 1);
+
+        for (Node node : tour) {
+            newTour.add(node);
+        }
+
+        for (int i = 0; i < n - k; i++) {
+            for (int j = i + k; j < n; j++) {
+                segment.clear();
+                flipped.clear();
+                for (int x = 0; x <= k; x++) {
+                    segment.add(newTour.get((i + x) % n));
+                }
+
+                int count = 0;
+                for (int x = k; x >= 0; x--) {
+                    flipped.add(segment.get(x));
+                    count++;
+                }
+
+                count = 0;
+                for (int x = i + 1; x < i + k; x++) {
+                    newTour.set(x, flipped.get(count));
+                    count++;
+                }
+
+                count = 0;
+                for (int x = i + k; x <= j; x++) {
+                    newTour.set(x, segment.get(count));
+                    count++;
+                }
+
+                count = 0;
+                for (int x = j + 1; x < n; x++) {
+                    newTour.set(x, tour.get((i + k + 1 + count) % n));
+                    count++;
+                }
+
+                if (calculateTourLength(newTour) < calculateTourLength(tour)) {
+                    tour.clear();
+                    for (Node node : newTour) {
+                        tour.add(node);
+                    }
+                }
+            }
+        }
+    }
+
+    // K Opt tour finish
 
     private static void swap(List<Node> nodes, Integer i, Integer j) {
         Node nodeI = nodes.get(i);
