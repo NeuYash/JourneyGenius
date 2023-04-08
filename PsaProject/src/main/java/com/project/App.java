@@ -1,8 +1,6 @@
 package com.project;
 
-import com.project.model.Christofides;
-import com.project.model.Edge;
-import com.project.model.Graph;
+import com.project.model.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,8 +8,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.project.model.Node;
 
 public class App {
 
@@ -78,5 +74,9 @@ public class App {
         // simulated annealing
         List<Node> simulatedAnneTour = Christofides.simulatedAnnealingOptimizeTour(hamiltonCycle);
         System.out.println("Simulated Annealing tour cost :" + Christofides.calculateTourLength(simulatedAnneTour));
+
+        //Genetic algo Optimization
+        List<Node> geneticTSP = TSPGenetic.TSPGenAlgo(hamiltonCycle);
+        System.out.println("Genetic TSP tour cost :" + Christofides.calculateTourLength(geneticTSP));
     }
 }
