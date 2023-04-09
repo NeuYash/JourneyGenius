@@ -8,9 +8,6 @@ import junit.framework.TestCase;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class ChristofidesTSPTest extends TestCase {
 
 	public static List<Node> ChrisTSP() {
