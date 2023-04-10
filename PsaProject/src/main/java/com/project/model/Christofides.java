@@ -290,9 +290,9 @@ public class Christofides {
     // SIMULATED ANNEALING
     public static List<Node> simulatedAnnealingOptimizeTour(List<Node> tour) {
         Random rand = new Random();
-        double temperature = 10000;
-        //double coolingRate = 0.003;
-        double coolingRate = 0.01;
+        double temperature = 700;
+        // double coolingRate = 0.003;
+        double coolingRate = 0.00001;
         List<Node> currentSolution = new ArrayList<>(tour);
         List<Node> bestSolution = new ArrayList<>(tour);
 
@@ -330,6 +330,8 @@ public class Christofides {
 
         return currentSolution;
     }
+    // SIMULATED ANNEALING FINISH
+
     private static void swap(List<Node> nodes, Integer i, Integer j) {
         Node nodeI = nodes.get(i);
         Node nodeJ = nodes.get(j);
