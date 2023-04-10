@@ -332,6 +332,186 @@ public class Christofides {
     }
     // SIMULATED ANNEALING FINISH
 
+    // ANT COLONY OPTIMIZATION
+    // In this example, we're creating an instance of AntColonyOptimization with 10
+    // ants, alpha = 1.0, beta = 5.0, evaporation rate = 0.5, and Q = 100.0.
+    public static class Ant {
+
+        private final List<Integer> visited;
+        private final boolean[] visitedArray;
+        private int current;
+        private List<Node> nodes;
+        private int numNodes;
+        private double[][] distances;
+
+        public Ant(int start, List<Node> nodes, double[][] distances) {
+            this.distances = distances;
+            this.nodes = nodes;
+            this.numNodes = nodes.size();
+            this.visited = new ArrayList<>(numNodes);
+            this.visitedArray = new boolean[numNodes];
+            this.current = start;
+            visited.add(current);
+            visitedArray[current] = true;
+            //();
+        }
+
+        public boolean isComplete() {
+            return visited.size() == numNodes;
+        }
+
+        public void move(double[][] distances, double[][] pheromones, double alpha, double beta, Random rand) {
+            double[] probabilities = new double[numNodes];
+            double totalProb = 0.0;
+
+            // Calculate probabilities for next move
+            for (int i = 0; i < numNodes; i++) {
+                if (!visitedArray[i]) {
+                    double pheromone = Math.pow(pheromones[current][i], alpha);
+                    double distance = Math.pow(1.0 / distances[current][i], beta);
+                    probabilities[i] = pheromone * distance;
+                    totalProb += probabilities[i];
+                }
+            }
+
+            // Choose next node randomly based on probabilities
+            double r = rand.nextDouble() * totalProb;
+            double sum = 0.0;
+            int next = -1;
+            for (int i = 0; i < numNodes; i++) {
+                if (!visitedArray[i]) {
+                    sum += probabilities[i];
+                    if (sum >= r) {
+                        next = i;
+                        break;
+                    }
+                }
+            }
+
+            // Move to next node
+            visited.add(next);
+            visitedArray[next] = true;
+            current = next;
+        }
+
+        public double getTourLength(double[][] distances) {
+            double tourLength = 0.0;
+            for (int i = 0; i < visited.size() - 1; i++) {
+                int from = visited.get(i);
+                int to = visited.get(i + 1);
+                tourLength += distances[from][to];
+            }
+            tourLength += distances[visited.get(numNodes - 1)][visited.get(0)];
+            return tourLength;
+        }
+
+        public List<Node> getTour(List<Node> nodes) {
+            List<Node> tour = new ArrayList<>(numNodes);
+            for (int i = 0; i < visited.size(); i++) {
+                tour.add(nodes.get(visited.get(i)));
+            }
+            return tour;
+        }
+
+        public void reset(int start) {
+            visited.clear();
+            Arrays.fill(visitedArray, false);
+            current = start;
+            visited.add(current);
+            visitedArray[current] = true;
+        }
+
+        public boolean visits(int i, int j) {
+            int idx_i = visited.indexOf(i);
+            int idx_j = visited.indexOf(j);
+            if (idx_i == -1 || idx_j == -1) {
+                return false;
+            }
+            return Math.abs(idx_i - idx_j) == 1 || Math.abs(idx_i - idx_j) == numNodes - 1;
+        }
+
+        public int getTourLength() {
+            return visited.size();
+        }
+    }
+
+    public static List<Node> aCOpt(List<Node> nodes) {
+
+        // initialize Attributes
+        Random rand = new Random();
+        int numNodes = nodes.size();
+
+        double alpha = 1.0;
+        double beta = 5.0; // can range in 1.0-5.0
+        double evaporationRate = 0.5; // can range in 0.1-0.5
+        double initialPheromoneLevel = 1.0;
+        int maxIterations = 100;
+        int numAnts = 10;
+
+        double[][] pheromones = new double[numNodes][numNodes];
+        for (int i = 0; i < numNodes; i++) {
+            for (int j = i + 1; j < numNodes; j++) {
+                pheromones[i][j] = initialPheromoneLevel;
+                pheromones[j][i] = initialPheromoneLevel;
+            }
+        }
+        double distances[][] = new double[numNodes][numNodes];
+        for (int i = 0; i < numNodes; i++) {
+            for (int j = 0; j < numNodes; j++) {
+                distances[i][j] = Graph.calculateDistance(nodes.get(i), nodes.get(j));
+            }
+        }
+
+        // Initialize ants
+        Ant[] ants = new Ant[numAnts];
+        for (int i = 0; i < numAnts; i++) {
+            ants[i] = new Ant(rand.nextInt(numNodes), nodes, distances);
+        }
+
+        // Main loop
+        for (int iter = 0; iter < maxIterations; iter++) {
+            // Move ants
+            for (Ant ant : ants) {
+                while (!ant.isComplete()) {
+                    ant.move(distances, pheromones, alpha, beta, rand);
+                }
+            }
+
+            // Update pheromones
+            for (int i = 0; i < numNodes; i++) {
+                for (int j = i + 1; j < numNodes; j++) {
+                    double deltaPheromone = 0.0;
+                    for (Ant ant : ants) {
+                        if (ant.visits(i, j)) {
+                            deltaPheromone += 1.0 / ant.getTourLength();
+                        }
+                    }
+                    pheromones[i][j] = (1 - evaporationRate) * pheromones[i][j] + deltaPheromone;
+                    pheromones[j][i] = pheromones[i][j];
+                }
+            }
+
+            // Reset ants
+            for (Ant ant : ants) {
+                ant.reset(rand.nextInt(numNodes));
+            }
+        }
+
+        // Return best tour found by any ant
+        double bestTourLength = Double.MAX_VALUE;
+        List<Node> bestTour = null;
+        for (Ant ant : ants) {
+            double tourLength = ant.getTourLength(distances);
+            if (tourLength < bestTourLength) {
+                bestTourLength = tourLength;
+                bestTour = ant.getTour(nodes);
+            }
+        }
+        return bestTour;
+    }
+
+    // ANT COLONY OPTIMIZATION FINISH
+
     private static void swap(List<Node> nodes, Integer i, Integer j) {
         Node nodeI = nodes.get(i);
         Node nodeJ = nodes.get(j);
