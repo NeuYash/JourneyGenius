@@ -71,7 +71,7 @@ public class TwoOptTest {
 	public void TwoOPT() {
 		List<Node> tsp = ChrisTSP();
 		assertEquals(tsp.size(), Christofides.twoOpt(tsp).size(), 0.01);
-		assertTrue(Christofides.calculateTourLength(tsp)==Christofides.calculateTourLength(Christofides.twoOpt(tsp)));
+		assertTrue(Christofides.calculateTourLength(tsp)>Christofides.calculateTourLength(Christofides.twoOpt(tsp)));
 	}
 
 }

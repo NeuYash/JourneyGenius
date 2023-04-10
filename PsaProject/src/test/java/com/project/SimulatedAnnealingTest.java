@@ -12,7 +12,6 @@ import com.project.model.Graph;
 import com.project.model.Node;
 
 public class SimulatedAnnealingTest {
-
 	public static List<Node> ChrisTSP() {
 		Graph graph = App.getNodesFromDataset();
 		graph.connectAllNodes();
@@ -22,7 +21,7 @@ public class SimulatedAnnealingTest {
 		List<Node> eulerTour = Christofides.eulerTour(graph, mst, perfectMatchingEdges);
 		return Christofides.generateTSPTour(eulerTour);
 	}
-	
+
 	public static List<Node> ChrisTSPNew(Graph graph) {
 		graph.connectAllNodes();
 		List<Edge> mst = Christofides.findMST(graph);
@@ -31,7 +30,7 @@ public class SimulatedAnnealingTest {
 		List<Node> eulerTour = Christofides.eulerTour(graph, mst, perfectMatchingEdges);
 		return Christofides.generateTSPTour(eulerTour);
 	}
-	
+
 	@Test
 	public void testTwoNodeGraph() {
 		Graph graph = new Graph();
@@ -47,7 +46,7 @@ public class SimulatedAnnealingTest {
 		assertEquals(node1, SAOptTsp.get(0));
 		assertEquals(node2, SAOptTsp.get(1));
 	}
-	
+
 	@Test
 	public void testThreeNodeGraph() {
 		Graph graph = new Graph();
@@ -65,12 +64,11 @@ public class SimulatedAnnealingTest {
 		assertEquals(node1, SAOptTsp.get(0));
 		assertEquals(node2, SAOptTsp.get(1));
 	}
-	
+
 	@Test
 	public void SimulatedAnnealingOPT() {
 		List<Node> tsp = ChrisTSP();
 		assertEquals(tsp.size(), Christofides.simulatedAnnealingOptimizeTour(tsp).size(), 0.01);
-		assertTrue(Christofides.calculateTourLength(tsp)<Christofides.calculateTourLength(Christofides.simulatedAnnealingOptimizeTour(tsp)));
+		assertTrue(Christofides.calculateTourLength(tsp)>Christofides.calculateTourLength(Christofides.simulatedAnnealingOptimizeTour(tsp)));
 	}
-
 }

@@ -34,7 +34,7 @@ public class Graph implements Serializable {
 	}
 
 	public static double calculateDistance(Node source, Node destination) {
-		int R = 6371; // Earth's radius in km
+		int R = 6378; // Earth's radius in km
 		double lat1 = Math.toRadians(source.getLatitude());
 		double lat2 = Math.toRadians(destination.getLatitude());
 		double lon1 = Math.toRadians(source.getLongitude());

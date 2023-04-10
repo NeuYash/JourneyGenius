@@ -98,49 +98,37 @@ public class Christofides {
         return randomSwapTour;
     }
 
-    public static List<Node> twoOpt(List<Node> tour) {
-        List<Node> twoOptTour = new ArrayList<>(tour);
-        double length = calculateTourLength(twoOptTour);
-        int n = twoOptTour.size();
-
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = i + 1; j < n; j++) {
-                Node u = twoOptTour.get(i);
-                Node v = twoOptTour.get((i + 1) % n);
-                Node x = twoOptTour.get(j);
-                Node y = twoOptTour.get((j + 1) % n);
-
-                // Compute the lengths of the two possible new twoOptTours.
-                double newLength1 = length - Graph.calculateDistance(u, v) - Graph.calculateDistance(x, y)
-                        + Graph.calculateDistance(u, x) + Graph.calculateDistance(v, y);
-                double newLength2 = length - Graph.calculateDistance(u, v) - Graph.calculateDistance(x, y)
-                        + Graph.calculateDistance(u, y) + Graph.calculateDistance(v, x);
-
-                // If either of the new twoOptTours is shorter, accept it as the new TSP
-                // twoOptTour.
-                if (newLength1 < length || newLength2 < length) {
-                    List<Node> newTour = new ArrayList<>();
-
-                    for (int k = 0; k <= i; k++) {
-                        newTour.add(twoOptTour.get(k));
+    public static List<Node> twoOpt(List<Node> nodes) {
+        boolean improved = true;
+        while (improved) {
+            improved = false;
+            for (int i = 1; i < nodes.size() - 1; i++) {
+                for (int j = i + 1; j < nodes.size(); j++) {
+                    double distanceBefore = calculateTourLength(nodes);
+                    List<Node> newNodes = twoOptSwap(nodes, i, j);
+                    double distanceAfter = calculateTourLength(newNodes);
+                    if (distanceAfter < distanceBefore) {
+                        nodes = newNodes;
+                        improved = true;
                     }
-
-                    for (int k = j; k >= i + 1; k--) {
-                        newTour.add(twoOptTour.get(k));
-                    }
-
-                    for (int k = j + 1; k < n; k++) {
-                        newTour.add(twoOptTour.get(k));
-                    }
-
-                    // Update the length of the new twoOptTour.
-                    length = (newLength1 < newLength2) ? newLength1 : newLength2;
-                    tour = new ArrayList<>(newTour);
                 }
             }
         }
+        return nodes;
+    }
 
-        return tour;
+    private static List<Node> twoOptSwap(List<Node> nodes, int i, int j) {
+        List<Node> newNodes = new ArrayList<Node>();
+        for (int k = 0; k < i; k++) {
+            newNodes.add(nodes.get(k));
+        }
+        for (int k = j; k >= i; k--) {
+            newNodes.add(nodes.get(k));
+        }
+        for (int k = j + 1; k < nodes.size(); k++) {
+            newNodes.add(nodes.get(k));
+        }
+        return newNodes;
     }
 
     // 3 OPT

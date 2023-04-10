@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 import java.util.List;
 
 public class ChristofidesTSPTest extends TestCase {
-
 	public static List<Node> ChrisTSP() {
 		Graph graph = App.getNodesFromDataset();
 		graph.connectAllNodes();
@@ -29,7 +28,7 @@ public class ChristofidesTSPTest extends TestCase {
 		return Christofides.generateTSPTour(eulerTour);
 	}
 
-	
+
 
 	// @Test
 	public void testTwoNodeGraph() {
@@ -63,7 +62,7 @@ public class ChristofidesTSPTest extends TestCase {
 		assertEquals(node1, tsp.get(0));
 		assertEquals(node2, tsp.get(1));
 		assertEquals(node3, tsp.get(2));
-		assertEquals(16895.438153961317, Christofides.calculateTourLength(tsp), 0.001);
+		assertEquals(16914.001655307686, Christofides.calculateTourLength(tsp), 0.001);
 	}
 
 	// @Test
@@ -88,6 +87,6 @@ public class ChristofidesTSPTest extends TestCase {
 		assertTrue(tour.contains(node3));
 		assertTrue(tour.contains(node4));
 		assertTrue(tour.contains(node5));
-		assertEquals(44025.37576885142, Christofides.calculateTourLength(tour), 0.001);
+		assertEquals(44073.747708952185, Christofides.calculateTourLength(tour), 0.001);
 	}
 }
