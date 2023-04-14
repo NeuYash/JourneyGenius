@@ -1,13 +1,33 @@
 package com.project.model;
 
 import com.project.utility.DeepCopyUtils;
+import com.project.visualization.GraphOperation;
 
 import java.util.*;
 
 public class Christofides {
 
+    public static List<GraphOperation> kruskalgos = new ArrayList<>();
+
+    public static List<GraphOperation> calcGraphOperation(List<Node> nodes) {
+        List<GraphOperation> gos = new ArrayList<>();
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            gos.add(GraphOperation.addEdge(nodes.get(i), nodes.get(i + 1)));
+        }
+        gos.add(GraphOperation.addEdge(nodes.get(nodes.size() - 1), nodes.get(0)));
+
+        return gos;
+    }
+
     public static List<Edge> findMST(Graph graph) {
-        return graph.kruskalMST();
+        List<Edge> kruskaledges = graph.kruskalMST();
+        for (Edge e : kruskaledges) {
+            kruskalgos.add(GraphOperation.addEdge(e));
+        }
+        kruskalgos.add(GraphOperation.addEdge(kruskaledges.get(kruskaledges.size() - 1).getDestination(),
+                kruskaledges.get(0).getSource()));
+
+        return kruskaledges;
     }
 
     public static List<Node> findOddDegreeVertices(Graph graph, List<Edge> mst) {
@@ -233,7 +253,7 @@ public class Christofides {
     // 3 OPT second Method finish
 
     // K Opt tour
-    public static void kOpt(List<Node> tour, int k) {
+    public static List<Node> kOpt(List<Node> tour, int k) {
         int n = tour.size();
         List<Node> segment = new ArrayList<>(k + 1);
         List<Node> newTour = new ArrayList<>(n);
@@ -283,6 +303,8 @@ public class Christofides {
                 }
             }
         }
+
+        return tour;
     }
 
     // K Opt tour finish
