@@ -1,5 +1,5 @@
 `Aim`
-The main aim of the Traveling Salesman Problem (TSP) is to find the optimal route for a salesperson to visit a given set of cities and return to the starting city, minimizing the distance travelled.
+The aim of the Traveling Salesman Problem (TSP) is to find the optimal route for a salesperson to visit a given set of cities and return to the starting city, minimizing the distance travelled.
 
 `How to Run`
 Go to [App.java](src/main/java/com/project/App.java) and run.
